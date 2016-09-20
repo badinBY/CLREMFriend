@@ -146,7 +146,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UserName"
+                android:text="Username"
                 android:id="@+id/textView6"
                 android:textSize="@dimen/h2"
                 android:layout_weight="2" />
