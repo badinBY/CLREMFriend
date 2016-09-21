@@ -40,6 +40,16 @@ public class SignUpActivity extends AppCompatActivity {
         userString = userEditText.getText().toString().trim();
         passwordString = passwordEditText.getText().toString().trim();
 
+        //Check Space
+        if (nameString.equals("") || addressString.equals("") ||
+                phoneString.equals("") || userString.equals("") || passwordString.equals("")) {
+            //Have Space
+            MyAlert myAlert = new MyAlert(this, R.drawable.doremon48, "มีช่องว่าง", "กรุณากรอกทุกช่อง ค่ะ");
+            myAlert.myDialog();
+
+
+        }
+
 
 
 
