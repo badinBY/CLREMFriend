@@ -1,6 +1,11 @@
 package th.ac.sut.library.clremfriend;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +20,9 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText nameEditText, addressEditText, phoneEditText,
             userEditText, passwordEditText;
     private String nameString, addressString, phoneString,
-            userString, passwordString, genderString, imageString;
+            userString, passwordString, genderString, imageString,
+            imagePathString, imageNameString;
+
     private RadioButton maleRadioButton, femaleRadioButton;
     private ImageView imageView;
 
@@ -38,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
         //ImageView Controller
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
@@ -58,11 +65,49 @@ public class SignUpActivity extends AppCompatActivity {
 
             Log.d("ClremFriendV1", "Result ==> Success");
 
+            //Find Path of Image
+            Uri uri = data.getData();
+            imagePathString = myFindPath(uri);
+            Log.d("ClremFriendV1", "imagePathString ==> " + imagePathString);
 
+            //Setup ImageView
+            try {
+
+                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
+                        .openInputStream(uri));
+                imageView.setImageBitmap(bitmap);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }   // if
 
     }   // onActivityResult
+
+    private String myFindPath(Uri uri) {
+
+        String strResult = null;
+
+        String[] strings = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, strings, null, null, null);
+
+        if (cursor != null) {
+
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            strResult = cursor.getString(index);
+
+
+        } else {
+            strResult = uri.getPath();
+        }
+
+
+
+        return strResult;
+    }
 
     public void clickSignUpSign(View view) {
 
