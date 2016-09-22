@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -28,6 +29,8 @@ public class SignUpActivity extends AppCompatActivity {
     private RadioButton maleRadioButton, femaleRadioButton;
     private ImageView imageView;
     private boolean statusABoolean = true;
+    private RadioGroup radioGroup;
+
 
 
 
@@ -49,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
         maleRadioButton = (RadioButton) findViewById(R.id.radioButton);
         femaleRadioButton = (RadioButton) findViewById(R.id.radioButton2);
         imageView = (ImageView) findViewById(R.id.imageView);
+        radioGroup = (RadioGroup) findViewById(R.id.regGender);
 
         //ImageView Controller
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +64,25 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "โปรดเลือกรูปภาพ"), 1);
 
             }   // onClick
+        });
+
+        //Radio Controller
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                switch (checkedId) {
+
+                    case R.id.radioButton:
+                        genderString = "Male";
+                        break;
+                    case R.id.radioButton2:
+                        genderString = "Female";
+                        break;
+
+                }
+
+            }   // onCheck
         });
 
 
@@ -91,6 +114,9 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             statusABoolean = false;
+
+            imageNameString = imagePathString.substring(imagePathString.lastIndexOf("/"));
+            Log.d("ClremFriendV1", "imageNameString ==>" + imageNameString);
 
         }   // if
 
@@ -138,12 +164,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         } else if (!(maleRadioButton.isChecked() || femaleRadioButton.isChecked())) {
             //Non Check
-            MyAlert myAlert = new MyAlert(this, R.drawable.doremon48,
+            MyAlert myAlert = new MyAlert(this, R.drawable.bird48,
                     "ยังไม่เลือก Gender", "กรุณาเลือก Gender");
             myAlert.myDialog();
         } else if (statusABoolean) {
             //Non Choose Image
-            MyAlert myAlert = new MyAlert(this, R.drawable.doremon48,
+            MyAlert myAlert = new MyAlert(this, R.drawable.kon48,
                     "ยังไม่เลือกรูปภาพ", "กรุณาเลือกรูปภาพด้วยค่ะ");
             myAlert.myDialog();
 
