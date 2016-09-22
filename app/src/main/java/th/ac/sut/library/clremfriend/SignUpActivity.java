@@ -28,6 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         userEditText = (EditText) findViewById(R.id.editText4);
         passwordEditText = (EditText) findViewById(R.id.editText5);
         maleRadioButton = (RadioButton) findViewById(R.id.radioButton);
+        femaleRadioButton = (RadioButton) findViewById(R.id.radioButton2);
         imageView = (ImageView) findViewById(R.id.imageView);
 
         //ImageView Controller
