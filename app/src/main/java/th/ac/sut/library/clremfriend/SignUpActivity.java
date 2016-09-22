@@ -1,12 +1,14 @@
 package th.ac.sut.library.clremfriend;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 import org.jibble.simpleftp.SimpleFTP;
 
@@ -208,6 +217,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 upLoadImageToServer();
+                upLoadStringToServer();
                 dialog.dismiss();
             }
         });
@@ -216,6 +226,75 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }   // confirmData
+
+    private void upLoadStringToServer() {
+
+        SaveUserToServer saveUserToServer = new SaveUserToServer(this);
+        saveUserToServer.execute();
+
+
+    }   // upLoadString
+
+
+    private class SaveUserToServer extends AsyncTask<Void, Void, String> {
+
+
+        //Explicit
+        private Context context;
+        private static final String urlPHP = "http://swiftcodingthai.com/Sut/add_user.php";
+
+        public SaveUserToServer(Context context) {
+            this.context = context;
+        }   // Constructor
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+
+                OkHttpClient okHttpClient = new OkHttpClient();
+                RequestBody requestBody = new FormEncodingBuilder()
+                        .add("isAdd", "true")
+                        .add("Name", nameString)
+                        .add("Image", "http://swiftcodingthai.com/Sut/Image" + imageNameString)
+                        .add("Gender", genderString)
+                        .add("Address", addressString)
+                        .add("Phone", phoneString)
+                        .add("User", userString)
+                        .add("Password", passwordString)
+                        .build();
+
+                Request.Builder builder = new Request.Builder();
+                Request request = builder.url(urlPHP).post(requestBody).build();
+                Response response = okHttpClient.newCall(request).execute();
+                return response.body().string();
+
+
+            } catch (Exception e) {
+                Log.d("ClremFriendV2", "e==>" + e.toString());
+                return null;
+            }
+
+
+        }   // doInBack
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Log.d("ClremFriendV2", "Result ==> " + s);
+
+            if (Boolean.parseBoolean(s)) {
+                Toast.makeText(context, "บันทึกข้อมูลเรียบร้อยแล้วค่ะ", Toast.LENGTH_SHORT).show();
+            } else {
+                MyAlert myAlert = new MyAlert(context, R.drawable.bird48, "Error", "ไม่สามารถบันทึกได้");
+            }
+
+        }   // onPost
+
+    }   // SaveUser
+
+
 
     private void upLoadImageToServer() {
 
@@ -235,7 +314,7 @@ public class SignUpActivity extends AppCompatActivity {
             simpleFTP.stor(new File(imagePathString));
             simpleFTP.disconnect();
 
-            Log.d("ClremFriendV1", "Upload Finish");
+            Log.d("ClremFriendV2", "Upload Finish");
 
 
 
