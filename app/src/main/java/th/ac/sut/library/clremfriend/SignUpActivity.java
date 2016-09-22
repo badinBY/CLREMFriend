@@ -1,5 +1,7 @@
 package th.ac.sut.library.clremfriend;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -25,6 +27,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     private RadioButton maleRadioButton, femaleRadioButton;
     private ImageView imageView;
+    private boolean statusABoolean = true;
+
+
+
 
 
 
@@ -84,6 +90,8 @@ public class SignUpActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            statusABoolean = false;
+
         }   // if
 
     }   // onActivityResult
@@ -133,10 +141,49 @@ public class SignUpActivity extends AppCompatActivity {
             MyAlert myAlert = new MyAlert(this, R.drawable.doremon48,
                     "ยังไม่เลือก Gender", "กรุณาเลือก Gender");
             myAlert.myDialog();
+        } else if (statusABoolean) {
+            //Non Choose Image
+            MyAlert myAlert = new MyAlert(this, R.drawable.doremon48,
+                    "ยังไม่เลือกรูปภาพ", "กรุณาเลือกรูปภาพด้วยค่ะ");
+            myAlert.myDialog();
+
+
+
+        } else {
+            confirmData();
+
         }
 
 
     } // clickSign
+
+    private void confirmData() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setIcon(R.drawable.doremon48);
+        builder.setTitle("โปรดตรวจสอบข้อมูล");
+        builder.setMessage("ชื่อ = " + nameString + "\n"
+                + "ที่อยู่ = " + addressString + "\n" +
+                "Phone = " + phoneString + "\n" +
+                "Gender = " + genderString);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
+
+
+    }   // confirmData
 
 
 }   // Main Class
